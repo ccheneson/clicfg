@@ -11,6 +11,8 @@ Configs are located
 
 `file` could be like `1.5.12.conf` or `api-back.1.2.2.conf`
 
+This is also my first application/tool in Rust
+
 # How to use it ?
 
 * List in S3 the existing conf for a particular project/environment (e.g. `api/staging`)
