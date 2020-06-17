@@ -29,7 +29,7 @@ impl CliConfig {
     }
 
     pub fn s3_path(&self) -> String {
-        format!("{project}/{environment}", project = self.project.to_string().to_lowercase(), environment = self.env.to_string().to_lowercase())
+        format!("{project}/{environment}", project = self.project.name().to_lowercase(), environment = self.env.to_string().to_lowercase())
     }
 
     pub fn local_path(&self) -> String {

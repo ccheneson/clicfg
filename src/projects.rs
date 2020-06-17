@@ -13,6 +13,17 @@ pub enum Project {
 }
 
 impl Project {
+
+    pub fn name(&self) -> String {
+        match &self {
+            Project::Registration => "registration".to_owned(),
+            Project::Authentication => "authentication".to_owned(),
+            Project::Authorization => "authorization".to_owned(),
+            Project::Api => "api".to_owned(),
+        }
+    }
+
+
     pub fn from_cli(env: Option<&String>) -> Result<Project, CliConfigError> {
         let cli_project = match env {
             Some(v) => v,

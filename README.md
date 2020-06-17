@@ -279,3 +279,13 @@ https://stackoverflow.com/questions/42551113/is-it-possible-to-conditionally-ena
 
 https://blog.rust-lang.org/2019/11/07/Async-await-stable.html
 
+
+* ### Enum
+
+Values in enum are called ` enum's variants`. 
+
+Enum variants **are not types**.
+
+https://stackoverflow.com/questions/51567350/can-traits-be-used-on-enum-types
+
+
