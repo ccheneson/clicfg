@@ -11,9 +11,11 @@ pub enum Command {
     Ls,
     LsLo,
     Cat { file: String },
+    Edit { file: String },
     Get { file: String },
     Put { file: String },
     Bump { file_from: String, file_to: String },
+    Diff { file_a: String, file_b: String },
 }
 
 impl Command {
@@ -41,6 +43,10 @@ impl Command {
                 Command::exit_on_missing_arg(&[&arg1])?;
                 Command::Cat { file: arg1.unwrap().to_owned() }
             }
+            "edit" => {
+                Command::exit_on_missing_arg(&[&arg1])?;
+                Command::Edit { file: arg1.unwrap().to_owned() }
+            }
             "get" => {
                 Command::exit_on_missing_arg(&[&arg1])?;
                 Command::Get { file: arg1.unwrap().to_owned() }
@@ -52,6 +58,10 @@ impl Command {
             "bump" => {
                 Command::exit_on_missing_arg(&[&arg1, &arg2])?;
                 Command::Bump { file_from: bump_to_conf(arg1.unwrap()), file_to: bump_to_conf(arg2.unwrap()) }
+            }
+            "diff" => {
+                Command::exit_on_missing_arg(&[&arg1, &arg2])?;
+                Command::Diff { file_a: arg1.unwrap().to_owned(), file_b: arg2.unwrap().to_owned() }
             }
             _ => {
                 help::print_help();

@@ -1,13 +1,14 @@
-use std::{fs, io};
+use std::{fs, io, env};
 
 use rusoto_s3::S3Client;
-
+use prettydiff::diff_chars;
 use commands::Command;
 use envs::Environment;
 use errors::CliConfigError;
 use projects::Project;
 use s3::client;
 use utils::*;
+use std::process::Command as CmdShell ;
 
 mod s3;
 mod envs;
@@ -40,7 +41,8 @@ fn main() -> Result<(), CliConfigError> {
             let s3_path = cli_config.s3_path();
             s3::cmd_ls(&s3_client, s3_path.as_str()).map(|output| for i in &output.contents.unwrap() {
                 println!("{filename}", filename = str::replace(i.key.as_ref().unwrap(), cli_config.s3_dir().as_str(), ""));
-            })
+            })?;
+            Ok(())
         }
         Command::Get { file } => {
             let file_paths = build_path_file(&cli_config, &file);
@@ -53,6 +55,18 @@ fn main() -> Result<(), CliConfigError> {
                 content.map(|c| println!("{}", c)).unwrap()
             })
         }
+        Command::Edit { file } => {
+            let file_paths = build_path_file(&cli_config, &file);
+            let editor = env::var("PMCFG_EDITOR").unwrap_or_else(|_|"vi".to_owned());
+            fetch_file(&s3_client, &file_paths.s3, &file_paths.local).map(|target_local| {
+                CmdShell::new(editor)
+                    .arg(target_local)
+                    .spawn().expect("Can not open editor")
+                    .wait().expect("Can not open editor");
+            })?;
+            s3::cmd_put(&s3_client, &file_paths.local, &file_paths.s3)?;
+            Ok(())
+        }
         Command::LsLo => {
             let local_path = cli_config.local_path();
             let mut paths = fs::read_dir(local_path).unwrap().map(|res| res.map(|e| e.file_name().into_string().unwrap()))
@@ -61,6 +75,17 @@ fn main() -> Result<(), CliConfigError> {
             for file in paths {
                 println!("{}", file)
             }
+            Ok(())
+        }
+        Command::Diff { file_a, file_b } => {
+            let paths_a = build_path_file(&cli_config, &file_a);
+            let paths_b = build_path_file(&cli_config, &file_b);
+            let _ = fetch_file(&s3_client, &paths_a.s3, &paths_a.local)?;
+            let _ = fetch_file(&s3_client, &paths_b.s3, &paths_b.local)?;
+            let txt_a = fs::read_to_string(paths_a.local).expect("Something went wrong reading the file");
+            let txt_b = fs::read_to_string(paths_b.local).expect("Something went wrong reading the file");
+            let change_set = diff_chars(txt_a.as_str(), txt_b.as_str());
+            println!("{}", change_set);
             Ok(())
         }
         Command::Put { file } => {

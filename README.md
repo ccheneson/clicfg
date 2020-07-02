@@ -37,6 +37,16 @@ This is also my first application/tool in Rust
 
 The above command will download `2.0.0.conf`, rename it the to version `2.1.0.conf`, and re-upload it to the `api/staging`
 
+`$> clicfg api staging diff 2.0.0.conf 2.1.0.conf`
+
+The above command highlights the difference between the file `2.0.0.conf` and the file `2.1.0.conf`
+
+`$> clicfg api staging edit 2.1.0.conf`
+
+The above command downloads the file `2.1.0.conf`, opens the file with the editor sets in `PMCFG_EDITOR` environment variable (default set to `vi`). When saving and closing `vi` (`:wq!`), it pushes the file back to the correct S3 path. 
+
+It doesn't work with GUI-based editors like `gedit`
+
 
 
 # Features learnt along the way
