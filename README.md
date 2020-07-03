@@ -77,6 +77,10 @@ Use slice
 
 https://stackoverflow.com/questions/28951503/how-can-i-create-a-function-with-a-variable-number-of-arguments
 
+Usage: https://github.com/ccheneson/clicfg/blob/ab90110e64ab30ea83659a765541cfb56ed6bd42/src/commands.rs#L23
+
+
+
 * ## const or static
 
 const: 
@@ -129,8 +133,9 @@ let s = std::env::current_exe()
     .to_string_lossy()
     .into_owned();
 ```
-
 https://www.programming-idioms.org/idiom/105/current-executable-name/1887/rust
+
+Usage: https://github.com/ccheneson/clicfg/blob/ab90110e64ab30ea83659a765541cfb56ed6bd42/src/help.rs#L2-L7
 
 * ## Errors
 
@@ -198,6 +203,8 @@ for file in paths {
 https://stackoverflow.com/questions/26076005/how-can-i-list-files-of-a-directory-in-rust
 
 https://doc.rust-lang.org/std/fs/fn.read_dir.html
+
+Usage: https://github.com/ccheneson/clicfg/blob/ab90110e64ab30ea83659a765541cfb56ed6bd42/src/main.rs#L42
 
 * ### `Result<T>` and `Result<T,E>`
 
