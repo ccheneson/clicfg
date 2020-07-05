@@ -305,4 +305,10 @@ Enum variants **are not types**.
 
 https://stackoverflow.com/questions/51567350/can-traits-be-used-on-enum-types
 
+* ### `map`and `and_then`
+
+https://stackoverflow.com/questions/62745681/how-to-flatten-two-result
+
+
+
 
