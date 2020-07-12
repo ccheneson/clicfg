@@ -309,6 +309,11 @@ https://stackoverflow.com/questions/51567350/can-traits-be-used-on-enum-types
 
 https://stackoverflow.com/questions/62745681/how-to-flatten-two-result
 
+* ### Some links about `String`, `str`
+
+https://www.ameyalokare.com/rust/2017/10/12/rust-str-vs-String.html
+
+https://blog.guillaume-gomez.fr/Rust/2/9
 
 
 
