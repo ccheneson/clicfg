@@ -104,7 +104,7 @@ fn main() -> Result<(), CliConfigError> {
 }
 
 
-fn fetch_file<'a>(s3_client: &'a S3Client, s3_file: &'a str, save_to: &'a str) -> Result<&'a str, CliConfigError> {
+fn fetch_file<'a>(s3_client: &S3Client, s3_file: &str, save_to: &'a str) -> Result<&'a str, CliConfigError> {
     let local_file = s3::cmd_get(&s3_client, s3_file, save_to);
     local_file
 }

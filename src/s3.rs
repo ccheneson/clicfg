@@ -47,7 +47,7 @@ pub async fn cmd_ls(s3_client: &S3Client, s3_path: &str) -> Result<ListObjectsV2
 }
 
 #[tokio::main]
-pub async fn cmd_get<'a>(s3_client: &S3Client, s3_file: &'a str, save_to: &'a str) -> Result<&'a str, CliConfigError> {
+pub async fn cmd_get<'a>(s3_client: &S3Client, s3_file: &str, save_to: &'a str) -> Result<&'a str, CliConfigError> {
     let get_obj_req = GetObjectRequest {
         bucket: BUCKET.to_owned(),
         key: s3_file.to_owned(),
