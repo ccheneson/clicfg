@@ -315,5 +315,11 @@ https://www.ameyalokare.com/rust/2017/10/12/rust-str-vs-String.html
 
 https://blog.guillaume-gomez.fr/Rust/2/9
 
+* ### I32 vs isize, u32 vs usize
 
+> Use usize and isize when it’s related to memory size – the size of an object, or indexing a vector, for instance. It will be a 32-bit number on 32-bit > > platforms, as that’s the limit of memory they can address, and likewise for 64-bit.
+
+> Use u32 and i32 when you just want numbers.
+
+https://users.rust-lang.org/t/i32-vs-isize-u32-vs-usize/22657
 
