@@ -18,6 +18,8 @@ mod utils;
 mod commands;
 mod help;
 mod errors;
+mod argvalidator;
+
 
 fn main() -> Result<(), CliConfigError> {
     let args: Vec<String> = std::env::args().collect();

@@ -1,5 +1,6 @@
 use strum_macros::Display;
-
+use crate::argvalidator::*;
+use crate::validate_args;
 use crate::errors::CliConfigError;
 use crate::errors::CliConfigError::CliArgError;
 use crate::help;
@@ -19,17 +20,6 @@ pub enum Command {
 }
 
 impl Command {
-    //https://stackoverflow.com/questions/28951503/how-can-i-create-a-function-with-a-variable-number-of-arguments
-    fn exit_on_missing_arg(args: &[&Option<&String>]) -> Result<(), CliConfigError> {
-        //x.clone because
-        //https://users.rust-lang.org/t/why-fromiterator-string-is-not-implemented-for-vec-string/28931
-        let a: Vec<&Option<&String>> = args.into_iter().filter(|arg| arg.is_none()).map(|x| x.clone()).collect();
-        if a.len() > 0 {
-            help::print_help();
-            return Err(CliArgError("Missing argument".to_owned()));
-        }
-        Ok(())
-    }
 
     pub fn from_cli(cmd: Option<&String>, arg1: Option<&String>, arg2: Option<&String>) -> Result<Command, CliConfigError> {
         let cli_cmd = cmd.ok_or_else(||{
@@ -40,27 +30,27 @@ impl Command {
             "ls" => Command::Ls {},
             "lslo" => Command::LsLo {},
             "cat" => {
-                Command::exit_on_missing_arg(&[&arg1])?;
+                validate_args!(&arg1)?;
                 Command::Cat { file: arg1.unwrap().to_owned() }
             }
             "edit" => {
-                Command::exit_on_missing_arg(&[&arg1])?;
+                validate_args!(&arg1)?;
                 Command::Edit { file: arg1.unwrap().to_owned() }
             }
             "get" => {
-                Command::exit_on_missing_arg(&[&arg1])?;
+                validate_args!(&arg1)?;
                 Command::Get { file: arg1.unwrap().to_owned() }
             }
             "put" => {
-                Command::exit_on_missing_arg(&[&arg1])?;
+                validate_args!(&arg1)?;
                 Command::Put { file: arg1.unwrap().to_owned() }
             }
             "bump" => {
-                Command::exit_on_missing_arg(&[&arg1, &arg2])?;
+                validate_args!(&arg1, &arg2)?;
                 Command::Bump { file_from: bump_to_conf(arg1.unwrap()), file_to: bump_to_conf(arg2.unwrap()) }
             }
             "diff" => {
-                Command::exit_on_missing_arg(&[&arg1, &arg2])?;
+                validate_args!(&arg1, &arg2)?;
                 Command::Diff { file_a: arg1.unwrap().to_owned(), file_b: arg2.unwrap().to_owned() }
             }
             _ => {
