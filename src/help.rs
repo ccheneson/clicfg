@@ -7,16 +7,16 @@ pub fn print_help() -> () {
         .into_owned();
 
     let man = format!("
-    usage: {} project env action parameter
+    usage: {exec} project env action parameter
 
-    example: {} api staging ls
-	     {} api staging get
-	     {} api staging put 2.1.13.conf
+    example: {exec} api staging ls
+	     {exec} api staging get
+	     {exec} api staging put 2.1.13.conf
 
     project choice : api, registration, authentication, authorization
     env choice : live, staging , hotfix
     action choice : get, put, ls, cat, lslo (ls local)
     parameter 1, 2, ... N : parameters for the action
-    ", exec_name, exec_name, exec_name, exec_name);
+    ", exec = exec_name);
     println!("{}", man)
 }
