@@ -323,3 +323,162 @@ https://blog.guillaume-gomez.fr/Rust/2/9
 
 https://users.rust-lang.org/t/i32-vs-isize-u32-vs-usize/22657
 
+* ### `into()`
+
+https://doc.rust-lang.org/rust-by-example/conversion/from_into.html
+
+The `Into` trait is simply the reciprocal of the `From` trait. That is, if you have implemented the `From` trait for your type, `Into` will call it when necessary.
+
+```rust
+use std::convert::From;
+
+#[derive(Debug)]
+struct Number {
+    value: i32,
+}
+
+impl From<i32> for Number {
+    fn from(item: i32) -> Self {
+        Number { value: item }
+    }
+}
+
+fn main() {
+    let int = 5;
+    // Try removing the type declaration
+    let num: Number = int.into();
+    println!("My number is {:?}", num);
+}
+
+```
+Similar to `From` and `Into`, `TryFrom` and `TryInto` are generic traits for converting between types. Unlike `From`/`Into`, the `TryFrom`/`TryInto` traits are used for fallible conversions, and as such, return `Result`s.
+
+
+
+* ### for and iterators
+
+The `for in` construct is able to interact with an Iterator in several ways. As discussed in the section on the `Iterator` trait, by default the `for` loop will apply the `into_iter` function to the collection. However, this is not the only means of converting collections into iterators.
+
+`into_iter`, `iter` and `iter_mut` all handle the conversion of a collection into an iterator in different ways, by providing different views on the data within.
+
+* `iter` - This `borrows` each element of the collection through each iteration. Thus leaving the collection untouched and available for reuse after the loop.
+
+* `into_iter` - This consumes the collection so that on each iteration the exact data is provided. Once the collection has been consumed it is no longer available for reuse as it has been `moved` within the loop.
+
+* `iter_mut` - This mutably borrows each element of the collection, allowing for the collection to be modified in place.
+
+
+
+
+* ### pointers/ref
+
+
+For pointers, a distinction needs to be made between destructuring and dereferencing as they are different concepts which are used differently from a language like C.
+
+* Dereferencing uses `*`
+    
+    ```rust
+    // Assign a reference of type `i32`. The `&` signifies there
+    // is a reference being assigned.
+    let reference = &4;
+
+    match reference {
+        // If `reference` is pattern matched against `&val`, it results
+        // in a comparison like:
+        // `&i32`
+        // `&val`
+        // ^ We see that if the matching `&`s are dropped, then the `i32`
+        // should be assigned to `val`.
+        &val => println!("Got a value via destructuring: {:?}", val),
+    }
+
+    // To avoid the `&`, you dereference before matching.
+    match *reference {
+        val => println!("Got a value via dereferencing: {:?}", val),
+    }
+    ```
+    
+* Destructuring uses `&`, `ref`, and `ref mut`
+```rust
+    // What if you don't start with a reference? `reference` was a `&`
+    // because the right side was already a reference. This is not
+    // a reference because the right side is not one.
+    let _not_a_reference = 3;
+
+    // Rust provides `ref` for exactly this purpose. It modifies the
+    // assignment so that a reference is created for the element; this
+    // reference is assigned.
+    let ref _is_a_reference = 3;
+
+    // Accordingly, by defining 2 values without references, references
+    // can be retrieved via `ref` and `ref mut`.
+    let value = 5;
+    let mut mut_value = 6;
+
+    // Use `ref` keyword to create a reference.
+    match value {
+        ref r => println!("Got a reference to a value: {:?}", r),
+    }
+
+    // Use `ref mut` similarly.
+    match mut_value {
+        ref mut m => {
+            // Got a reference. Gotta dereference it before we can
+            // add anything to it.
+            *m += 10;
+            println!("We added 10. `mut_value`: {:?}", m);
+        },
+    }
+```
+
+https://doc.rust-lang.org/rust-by-example/flow_control/match/destructuring/destructure_pointers.html
+
+
+* ### Closures - As Input parameters
+
+
+*    `Fn`: the closure captures by reference (`&T`)
+*    `FnMut`: the closure captures by mutable reference (`&mut T`)
+*    `FnOnce`: the closure captures by value (`T`)
+
+
+https://doc.rust-lang.org/rust-by-example/fn/closures/input_parameters.html
+
+
+
+* ### Closures - As Output parameters
+
+```rust
+
+fn create_fn() -> impl Fn() {
+    let text = "Fn".to_owned();
+
+    move || println!("This is a: {}", text)
+}
+
+fn create_fnmut() -> impl FnMut() {
+    let text = "FnMut".to_owned();
+
+    move || println!("This is a: {}", text)
+}
+
+fn create_fnonce() -> impl FnOnce() {
+    let text = "FnOnce".to_owned();
+
+    move || println!("This is a: {}", text)
+}
+
+fn main() {
+    let fn_plain = create_fn();
+    let mut fn_mut = create_fnmut();
+    let fn_once = create_fnonce();
+
+    fn_plain();
+    fn_mut();
+    fn_once();
+}
+```
+https://doc.rust-lang.org/rust-by-example/fn/closures/output_parameters.html
+
+
+
