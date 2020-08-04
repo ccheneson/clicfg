@@ -7,12 +7,12 @@ macro_rules! validate_args {
             let b = $elem.validate();
             v.push(b);
         )*
-        let result : Vec<&bool> = v.iter().filter(|arg| **arg == false).collect();
-        if result.len()  == 0 {
-            Ok(())
-        } else {
+        let exists_false = v.into_iter().any(|arg| arg == false);
+        if exists_false {
             help::print_help();
             Err(CliArgError("Missing argument(s)".to_owned()))
+        } else {
+            Ok(())
         }
         }}
     }
